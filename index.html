@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<title>Here's a thing. </title>
+	</head>
+	<body>
+		<div id="farts">
+			<script type="text/javascript" src="jquery-2.0.1.js"></script>
+			<script type="text/javascript" src="sha1.js"></script>
+			<script type="text/javascript" src="codebird.js"></script>
+			<script type="text/javascript" src="underscore.js"></script>
+			<script type="text/javascript" src="highcharts.js"></script>
+			<script type="text/javascript" src="linechart.js"></script>
+			<script type="text/javascript">
+				var cb = new Codebird;
+				cb.setConsumerKey('CONSUMER KEY', 'CONSUMER SECRET');
+				cb.setToken('AUTH TOKEN', 'AUTH SECRET');
+				cb.__call(
+				    'statuses_userTimeline',
+				    {'screen_name': 'beertempmonitor'},
+				    function (reply) {
+				    	var temps = _.map(reply, function(tweet) {
+				    		var date = new Date(Date.parse(tweet.created_at));
+				    		return {time: date.getTime(), temp: tweet.text.split(" taken at ")[0]};
+				    	});
+				    	if (temps.length === 0) {
+				    		$("#chart").append("<h1> nooooo dataaaaa </h1>");
+				    	} else {
+					    	var chart = new LineChart({elementId: "chart"});
+					    	chart.setData(temps);
+					    	chart.render();	
+				    	}
+				    	
+				    }
+				);
+			</script>	
+			<div id="chart" />		
+		</div>
+	</body>
+</html>
